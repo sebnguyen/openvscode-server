@@ -283,31 +283,8 @@
 	display: none;
 }
 
-/* App Icon */
-.monaco-workbench .part.titlebar > .titlebar-container > .titlebar-left > .window-appicon {
-	width: 35px;
-	height: 100%;
-	position: relative;
-	z-index: 2500;
-	flex-shrink: 0;
-	order: 1;
-}
-
-.monaco-workbench .part.titlebar > .titlebar-container > .titlebar-left > .window-appicon:not(.codicon) {
-	background-image: url('../../../media/code-icon.svg');
-	background-repeat: no-repeat;
-	background-position: center center;
-	background-size: 16px;
-}
-
-.monaco-workbench .part.titlebar > .titlebar-container > .titlebar-left > .window-appicon.codicon {
-	line-height: 30px;
-}
-
-.monaco-workbench.fullscreen .part.titlebar > .titlebar-container > .titlebar-left > .window-appicon {
-	display: none;
-}
-
+/* App Icon — deleted for the DSH twin: no OSS product icon in the titlebar.
+   The element itself is no longer created (titlebarPart.ts). */
 /* Window Controls Container */
 .monaco-workbench .part.titlebar .window-controls-container {
 	display: flex;

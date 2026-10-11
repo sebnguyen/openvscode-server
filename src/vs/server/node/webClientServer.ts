@@ -428,6 +428,19 @@ export class WebClientServer {
 					'statusBar.background': '#121618',
 				}
 			},
+			// Harness twin: the startup-critical identity defaults ride the product
+			// channel, not the staged extension — extension configurationDefaults only
+			// merge after the layout state model loads, so keys consumed at layout
+			// boot (welcome flash, auxiliary bar, the floating-window architecture)
+			// would race and misfire once per fresh profile. These are defaults, not
+			// locks: the twin's own Settings UI still overrides them.
+			configurationDefaults: {
+				'workbench.startupEditor': 'none',
+				'workbench.tips.enabled': false,
+				'workbench.secondarySideBar.defaultVisibility': 'hidden',
+				'chat.disableAIFeatures': true,
+				'workbench.experimental.modernUI': true,
+			},
 			_wrapWebWorkerExtHostInIframe,
 			developmentOptions: { enableSmokeTestDriver: this._environmentService.args['enable-smoke-test-driver'] ? true : undefined, logLevel: this._logService.getLevel() },
 			settingsSyncOptions: !this._environmentService.isBuilt && this._environmentService.args['enable-sync'] ? { enabled: true } : undefined,
