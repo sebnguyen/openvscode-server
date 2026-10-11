@@ -6,6 +6,14 @@
 			performance.mark('code/didStartRenderer');
 		</script>
 		<meta charset="utf-8" />
+		<meta name="color-scheme" content="dark" />
+
+		<!-- Harness twin: dark first paint — the frame sits inside a dark host page, so a
+		     white boot fill would flash against it. The harness ink (#121618 on #f7f8f8)
+		     holds until the workbench stylesheet and theme take over. -->
+		<style>
+			html, body { background-color: #121618; color: #f7f8f8; }
+		</style>
 
 		<!-- Mobile tweaks -->
 		<meta name="mobile-web-app-capable" content="yes" />

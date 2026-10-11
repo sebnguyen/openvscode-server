@@ -416,6 +416,18 @@ export class WebClientServer {
 		const workbenchWebConfiguration = {
 			remoteAuthority,
 			serverBasePath: basePath,
+			// Harness twin: the first-paint hint — dark boot colors hold until the real
+			// theme (DO Harness Dark via configurationDefaults) is loaded and applied,
+			// in the spirit of `configurationDefaults` colors, per web.api.ts.
+			initialColorTheme: {
+				themeType: 'dark',
+				colors: {
+					'editor.background': '#171b1d',
+					'sideBar.background': '#1b1f21',
+					'activityBar.background': '#121618',
+					'statusBar.background': '#121618',
+				}
+			},
 			_wrapWebWorkerExtHostInIframe,
 			developmentOptions: { enableSmokeTestDriver: this._environmentService.args['enable-smoke-test-driver'] ? true : undefined, logLevel: this._logService.getLevel() },
 			settingsSyncOptions: !this._environmentService.isBuilt && this._environmentService.args['enable-sync'] ? { enabled: true } : undefined,

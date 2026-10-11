@@ -15,6 +15,22 @@ headless — it has no `out/vs/code/browser/workbench/workbench.{js,css}`, so it
 bundles and serves them. `vscode-web-linux-x64` / `vscode-web` are the
 disconnected static-web-client lanes and are not what the REH serves.
 
+## Dark first paint (harness embedding)
+
+The twin mounts inside a dark host page, so stock white boot states flash
+against it. Two source-level patches cover the two flash windows:
+
+- `src/vs/code/browser/workbench/workbench.html` — `color-scheme: dark` plus an
+  inline `html, body { background: #121618 }` so the document canvas never
+  renders white while scripts load. Durable (carries through every build).
+- `src/vs/server/node/webClientServer.ts` — `initialColorTheme` on the
+  workbench web configuration with DO Harness Dark boot colors, so the theme
+  service paints dark until `configurationDefaults` merge and the real theme
+  takes over (this is exactly what the upstream hook is for, per web.api.ts).
+
+Both land via rebuilds; the currently staged `../.vscode-twin/dist` carries
+the same html patch applied directly to its built copy.
+
 ## Kept functionality
 
 ### Workbench core (client bundle)
