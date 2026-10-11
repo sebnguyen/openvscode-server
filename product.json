@@ -87,6 +87,11 @@
 			}
 		}
 	],
+	"extensionsGallery": {
+		"serviceUrl": "https://open-vsx.org/vscode/gallery",
+		"itemUrl": "https://open-vsx.org/vscode/item",
+		"resourceUrlTemplate": "https://openvsxorg-server.blob.core.windows.net/public/{namespace}/{name}/{version}/{namespace}-{name}-{version}.vsix"
+	},
 	"defaultChatAgent": {
 		"extensionId": "GitHub.copilot",
 		"chatExtensionId": "GitHub.copilot-chat",

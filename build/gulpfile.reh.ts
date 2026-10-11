@@ -548,9 +548,10 @@ function prepareCopilotRipgrepShimTaskREH(platform: string, arch: string, destin
 				compileNativeExtensionsBuildTask,
 				task.task(`node-${platform}-${arch}`) as task.Task,
 				util.rimraf(path.join(BUILD_ROOT, destinationFolderName)),
-				packageTask(type, platform, arch, sourceFolderName, destinationFolderName),
-				prepareCopilotRipgrepShimTaskREH(platform, arch, destinationFolderName)
-			];
+				packageTask(type, platform, arch, sourceFolderName, destinationFolderName)
+				// DSH strip: in-tree Copilot built-in excluded from the OSS editor
+				// twin (extension support comes from the gallery, not this pipeline).
+			]
 
 			if (platform === 'win32') {
 				packageTasks.push(patchWin32DependenciesTask(destinationFolderName));
@@ -564,7 +565,6 @@ function prepareCopilotRipgrepShimTaskREH(platform: string, arch: string, destin
 				compileApiProposalNamesTask,
 				cleanExtensionsBuildTask,
 				compileNonNativeExtensionsBuildTask,
-				compileCopilotExtensionBuildTask,
 				compileExtensionMediaBuildTask,
 				writeISODate('out-build'),
 				minified ? esbuildBundleMinTask : esbuildBundleTask,
