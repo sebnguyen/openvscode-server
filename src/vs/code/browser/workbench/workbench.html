@@ -13,7 +13,17 @@
 		     holds until the workbench stylesheet and theme take over. -->
 		<style>
 			html, body { background-color: #121618; color: #f7f8f8; }
+			html.dsh-glass, html.dsh-glass body { background-color: transparent; }
 		</style>
+		<script nonce="{{WORKBENCH_SCRIPT_NONCE}}">
+			// DSH glass frame opt-in: ?dshGlass=1 (or sessionStorage 'dshGlass') floats
+			// the workbench as a bordered translucent card over the embedding host page.
+			try {
+				if (new URLSearchParams(location.search).get('dshGlass') === '1' || sessionStorage.getItem('dshGlass') === '1') {
+					document.documentElement.classList.add('dsh-glass');
+				}
+			} catch { /* storage unavailable: stay opaque */ }
+		</script>
 
 		<!-- Mobile tweaks -->
 		<meta name="mobile-web-app-capable" content="yes" />

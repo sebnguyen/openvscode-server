@@ -359,3 +359,39 @@ body {
 	outline: 1px dashed var(--vscode-toolbar-hoverOutline);
 	outline-offset: -1px;
 }
+
+/* ----- DSH glass frame (web client) -----
+ * Opt in via ?dshGlass=1 (see workbench.html): the workbench floats as a
+ * rounded, bordered, translucent card over the embedding host page — the
+ * same frame language as the harness chat window (14px radius, hairline
+ * ring, soft shadow). html/body stay transparent; the parts dim through
+ * theme color overrides so text keeps contrast over the blur. */
+html.dsh-glass,
+html.dsh-glass body {
+	background-color: transparent !important;
+}
+
+html.dsh-glass .monaco-workbench {
+	--vscode-editor-background: rgba(30, 30, 30, 0.55);
+	--vscode-sideBar-background: rgba(27, 31, 33, 0.72);
+	--vscode-activityBar-background: rgba(27, 31, 33, 0.85);
+	--vscode-titleBar-activeBackground: rgba(27, 31, 33, 0.85);
+	--vscode-titleBar-inactiveBackground: rgba(27, 31, 33, 0.85);
+	--vscode-statusBar-background: rgba(27, 31, 33, 0.85);
+	--vscode-panel-background: rgba(27, 31, 33, 0.72);
+	position: fixed;
+	inset: 0;
+	width: auto;
+	height: auto;
+	margin: 10px;
+	border-radius: 14px;
+	overflow: hidden;
+	background-color: transparent !important;
+	box-shadow:
+		0 0 0 0.5px rgba(247, 248, 248, 0.2),
+		0 3px 8px rgba(0, 0, 0, 0.03),
+		0 0 20px rgba(0, 0, 0, 0.25);
+	backdrop-filter: blur(14px);
+	-webkit-backdrop-filter: blur(14px);
+}
+
