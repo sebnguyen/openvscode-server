@@ -8,11 +8,22 @@ import path from 'path';
 
 const root = path.dirname(path.dirname(import.meta.dirname));
 
+/** Pins from root `.npmrc`; absent on dsh-build (reh-web ships Node runtime only). */
+function readElectronPinsFromNpmrc(npmrc: string): { electronVersion: string; msBuildId: string } | undefined {
+	const electronMatch = /^target="(.*)"$/m.exec(npmrc);
+	const msBuildMatch = /^ms_build_id="(.*)"$/m.exec(npmrc);
+	if (!electronMatch || !msBuildMatch) {
+		return undefined;
+	}
+	return { electronVersion: electronMatch[1], msBuildId: msBuildMatch[1] };
+}
+
+/** Last desktop pin before dsh-build dropped Electron from root `.npmrc`; gulp metadata only. */
+const DSH_REH_WEB_ELECTRON_PINS = { electronVersion: '43.7.7', msBuildId: '15553055' };
+
 export function getElectronVersion(rootDir: string = root): Record<string, string> {
 	const npmrc = fs.readFileSync(path.join(rootDir, '.npmrc'), 'utf8');
-	const electronVersion = /^target="(.*)"$/m.exec(npmrc)![1];
-	const msBuildId = /^ms_build_id="(.*)"$/m.exec(npmrc)![1];
-	return { electronVersion, msBuildId };
+	return readElectronPinsFromNpmrc(npmrc) ?? DSH_REH_WEB_ELECTRON_PINS;
 }
 
 export function shouldDownloadElectron(repoRoot = root, environment: NodeJS.ProcessEnv = process.env, platform: NodeJS.Platform = process.platform): boolean {
@@ -21,6 +32,11 @@ export function shouldDownloadElectron(repoRoot = root, environment: NodeJS.Proc
 	}
 	if (environment.VSCODE_FORCE_PRELAUNCH) {
 		return true;
+	}
+
+	const npmrc = fs.readFileSync(path.join(repoRoot, '.npmrc'), 'utf8');
+	if (!readElectronPinsFromNpmrc(npmrc)) {
+		return false;
 	}
 
 	const { electronVersion } = getElectronVersion(repoRoot);
