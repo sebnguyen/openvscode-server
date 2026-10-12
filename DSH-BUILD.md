@@ -15,6 +15,16 @@ headless — it has no `out/vs/code/browser/workbench/workbench.{js,css}`, so it
 bundles and serves them. `vscode-web-linux-x64` / `vscode-web` are the
 disconnected static-web-client lanes and are not what the REH serves.
 
+## No Electron native build
+
+This branch does not compile desktop natives. Root `.npmrc` has no Electron
+`target`, so `build/npm/preinstall.ts` does not download Electron headers, and
+root `allowScripts` is false, so `npm ci` does not node-gyp the root tree.
+`remote/.npmrc` stays `runtime=node` and `remote/package.json` still builds the
+server natives (`node-pty`, `kerberos`, `spdlog`, `sqlite3`, ripgrep, watcher,
+watchdog, `fs-copyfile`, `policy-watcher`). `gulp vscode-reh-web-*` packages
+that remote tree, not `node_modules` at the repo root.
+
 ## Dark first paint (harness embedding)
 
 The twin mounts inside a dark host page, so stock white boot states flash
