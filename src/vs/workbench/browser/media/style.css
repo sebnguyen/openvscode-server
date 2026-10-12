@@ -372,13 +372,16 @@ html.dsh-glass body {
 }
 
 html.dsh-glass .monaco-workbench {
-	--vscode-editor-background: rgba(30, 30, 30, 0.55);
-	--vscode-sideBar-background: rgba(27, 31, 33, 0.72);
-	--vscode-activityBar-background: rgba(27, 31, 33, 0.85);
-	--vscode-titleBar-activeBackground: rgba(27, 31, 33, 0.85);
-	--vscode-titleBar-inactiveBackground: rgba(27, 31, 33, 0.85);
-	--vscode-statusBar-background: rgba(27, 31, 33, 0.85);
-	--vscode-panel-background: rgba(27, 31, 33, 0.72);
+	/* The workbench theme service writes theme colors as inline custom
+	 * properties on this element; inline wins over a plain stylesheet
+	 * declaration, so glass needs !important to actually transluce. */
+	--vscode-editor-background: rgba(30, 30, 30, 0.55) !important;
+	--vscode-sideBar-background: rgba(27, 31, 33, 0.72) !important;
+	--vscode-activityBar-background: rgba(27, 31, 33, 0.85) !important;
+	--vscode-titleBar-activeBackground: rgba(27, 31, 33, 0.85) !important;
+	--vscode-titleBar-inactiveBackground: rgba(27, 31, 33, 0.85) !important;
+	--vscode-statusBar-background: rgba(27, 31, 33, 0.85) !important;
+	--vscode-panel-background: rgba(27, 31, 33, 0.72) !important;
 	background-color: transparent !important;
 	backdrop-filter: blur(14px);
 	-webkit-backdrop-filter: blur(14px);
