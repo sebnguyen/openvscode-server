@@ -438,7 +438,7 @@ html.dsh-glass .monaco-workbench {
 	 * a single source of truth. */
 	--dsh-glass-stroke-color: rgba(247, 248, 248, 0.2);
 	--dsh-glass-card-radius: 14px;
-	--dsh-glass-blur: blur(14px);
+	--dsh-glass-blur: blur(24px) saturate(1.35);
 	--dsh-glass-card-elevation:
 		0 0 0 0.5px var(--dsh-glass-stroke-color),
 		0 3px 8px 0 rgba(0, 0, 0, 0.03),
