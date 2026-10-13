@@ -393,11 +393,16 @@ html.dsh-glass .monaco-workbench {
 	 * inputs…) keeps the DO walrus black/grey theme fills. */
 	--dsh-glass-stroke-color: rgba(247, 248, 248, 0.2);
 	--dsh-glass-card-radius: 14px;
+	--dsh-glass-blur: blur(24px) saturate(1.35);
 	--dsh-glass-card-elevation:
 		0 0 0 0.5px var(--dsh-glass-stroke-color),
 		0 3px 8px 0 rgba(0, 0, 0, 0.03),
 		0 0 16px 0 rgba(0, 0, 0, 0.02);
 	background-color: transparent !important;
+	/* Frosted glass: the transparent slot windows blur the host's ocean
+	 * behind them — the same --dsh-glass-blur recipe the host slots use. */
+	backdrop-filter: var(--dsh-glass-blur);
+	-webkit-backdrop-filter: var(--dsh-glass-blur);
 }
 
 /* updateStyles() paints every part surface as a concrete inline color, and
