@@ -374,9 +374,12 @@ html.dsh-glass body {
 html.dsh-glass .monaco-workbench {
 	/* The workbench theme service writes theme colors as inline custom
 	 * properties on this element; inline wins over a plain stylesheet
-	 * declaration, so glass needs !important to actually transluce. */
+	 * declaration, so glass needs !important to actually transluce.
+	 * --vscode-surface-background joins the set: the floating-panel cards
+	 * paint from the surface tokens, not the sidebar one. */
 	--vscode-editor-background: rgba(30, 30, 30, 0.55) !important;
 	--vscode-sideBar-background: rgba(27, 31, 33, 0.72) !important;
+	--vscode-surface-background: rgba(27, 31, 33, 0.72) !important;
 	--vscode-activityBar-background: rgba(27, 31, 33, 0.85) !important;
 	--vscode-titleBar-activeBackground: rgba(27, 31, 33, 0.85) !important;
 	--vscode-titleBar-inactiveBackground: rgba(27, 31, 33, 0.85) !important;
@@ -385,5 +388,37 @@ html.dsh-glass .monaco-workbench {
 	background-color: transparent !important;
 	backdrop-filter: blur(14px);
 	-webkit-backdrop-filter: blur(14px);
+}
+
+/* updateStyles() paints every part surface as a concrete inline color, and
+ * inline beats any non-!important stylesheet rule — the glass variables
+ * above only reach the parts through these re-routes. Only the sidebar and
+ * panel already had !important var rules (floatingPanels.css) before
+ * floating mode: these cover all seven uniformly so every window of the
+ * workbench is glass, matching the host's floating-card architecture. */
+html.dsh-glass .monaco-workbench .part.sidebar,
+html.dsh-glass .monaco-workbench .part.auxiliarybar {
+	background-color: var(--vscode-sideBar-background) !important;
+}
+
+html.dsh-glass .monaco-workbench .part.panel {
+	background-color: var(--vscode-panel-background) !important;
+}
+
+html.dsh-glass .monaco-workbench .part.editor {
+	background-color: var(--vscode-editor-background) !important;
+}
+
+html.dsh-glass .monaco-workbench .part.activitybar {
+	background-color: var(--vscode-activityBar-background) !important;
+}
+
+html.dsh-glass .monaco-workbench .part.titlebar {
+	background-color: var(--vscode-titleBar-activeBackground) !important;
+}
+
+html.dsh-glass .monaco-workbench .part.statusbar {
+	background-color: var(--vscode-statusBar-background) !important;
+	border-top-color: transparent !important;
 }
 

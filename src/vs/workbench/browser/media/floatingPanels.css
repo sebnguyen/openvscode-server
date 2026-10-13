@@ -704,3 +704,33 @@
 	from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
 	to { background-position: 0 14px, 0 -10px, 0 0, 0 0, 0 0, 0 0; }
 }
+
+/* ---- DSH glass: every window floats on the host's ocean, not an in-iframe one ----
+ *
+ * The ambient scene above is for a standalone twin. Under `html.dsh-glass`
+ * (opt-in in workbench.html) the embedding page paints its own OceanScene
+ * and the workbench document is fully transparent (style.css), so the
+ * in-iframe scene and the shell fill would double-paint over the host.
+ * Drop them and keep only the card lift: radius (14px above) plus the
+ * harness frame's soft-elevation shadow on every floating window. */
+html.dsh-glass .monaco-workbench.floating-panels,
+html.dsh-glass .monaco-workbench.floating-panels > .monaco-grid-view {
+	background-color: transparent !important;
+	background-image: none !important;
+	animation: none !important;
+}
+
+html.dsh-glass .monaco-workbench.floating-panels .part:is(.sidebar, .auxiliarybar, .panel, .activitybar),
+html.dsh-glass .monaco-workbench.floating-panels > .monaco-grid-view .part.editor {
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.24);
+}
+
+/* The editor window is chromeless in the upstream system — no border, and
+ * no !important surface rule for the part to claim. Round and stroke it
+ * like the harness frame's center card; its glass surface is set with the
+ * other parts in style.css. */
+html.dsh-glass .monaco-workbench.floating-panels > .monaco-grid-view .part.editor {
+	border: 1px solid var(--modern-ui-floating-card-border-color, var(--vscode-surface-border, var(--vscode-widget-border, rgba(247, 248, 248, 0.12))));
+	border-radius: var(--vscode-cornerRadius-large, 14px);
+	overflow: hidden;
+}
