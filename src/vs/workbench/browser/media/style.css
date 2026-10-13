@@ -406,6 +406,30 @@ html.dsh-glass .monaco-workbench {
 	--vscode-quickInput-background: transparent !important;
 	--vscode-notification-background: transparent !important;
 	--vscode-terminal-background: transparent !important;
+	/* Remaining surfaces off the registry defaults: unfocused tab variants,
+	 * statusbar states, peek views, banners, hovers and the misc widgets
+	 * the DO theme never named — the full transparent motif. */
+	--vscode-tab-hoverBackground: transparent !important;
+	--vscode-tab-unfocusedActiveBackground: transparent !important;
+	--vscode-tab-unfocusedInactiveBackground: transparent !important;
+	--vscode-editor-lineHighlightBackground: transparent !important;
+	--vscode-editor-foldBackground: transparent !important;
+	--vscode-statusBar-debuggingBackground: transparent !important;
+	--vscode-statusBar-noFolderBackground: transparent !important;
+	--vscode-statusBar-prominentBackground: transparent !important;
+	--vscode-commandCenter-background: transparent !important;
+	--vscode-banner-background: transparent !important;
+	--vscode-editorHoverWidget-statusBarBackground: transparent !important;
+	--vscode-peekView-background: transparent !important;
+	--vscode-peekViewTitle-background: transparent !important;
+	--vscode-peekViewResult-background: transparent !important;
+	--vscode-walkThrough-embeddedEditorBackground: transparent !important;
+	--vscode-debugToolBar-background: transparent !important;
+	--vscode-keybindingLabel-background: transparent !important;
+	--vscode-listFilterWidget-background: transparent !important;
+	--vscode-list-hoverBackground: transparent !important;
+	--vscode-list-focusBackground: transparent !important;
+	--vscode-dropdown-listBackground: transparent !important;
 	/* The one glass container template: every window shares these tokens.
 	 * Values mirror the host chat window — ui-theme's dark elevation pair
 	 * (0.5px hairline stroke in border-l4 plus two soft glows) on the
