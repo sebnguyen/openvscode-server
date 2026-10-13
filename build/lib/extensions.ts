@@ -638,13 +638,13 @@ export async function esbuildExtensions(taskName: string, isWatch: boolean, scri
 }
 
 
-// Additional projects to run esbuild on. These typically build code for webviews
+// DSH strip: notebook and simple-browser media dropped; mermaid restored
 const esbuildMediaScripts: { script: string; tsconfig: string }[] = [
-	// DSH strip: only markdown preview/media kept (notebook, mermaid, simple-browser dropped)
 	{ script: 'markdown-language-features/esbuild.notebook.mts', tsconfig: 'markdown-language-features/notebook/tsconfig.json' },
 	{ script: 'markdown-language-features/esbuild.webview.mts', tsconfig: 'markdown-language-features/preview-src/tsconfig.json' },
 	{ script: 'markdown-language-features/esbuild.markdownEditor.mts', tsconfig: 'markdown-language-features/markdown-editor-src/tsconfig.json' },
 	{ script: 'markdown-math/esbuild.notebook.mts', tsconfig: 'markdown-math/notebook/tsconfig.json' },
+	{ script: 'mermaid-markdown-features/esbuild.webview.mts', tsconfig: 'mermaid-markdown-features/preview-src/tsconfig.json' },
 ];
 
 export function buildExtensionMedia(isWatch: boolean, outputRoot?: string): Promise<void> {

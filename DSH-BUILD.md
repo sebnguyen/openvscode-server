@@ -97,7 +97,7 @@ the same html patch applied directly to its built copy.
 | File | Change |
 |---|---|
 | `build/gulpfile.reh.ts` | Removed `compileCopilotExtensionBuildTask` from REH composition and the `prepareCopilotRipgrepShimTaskREH` hook from packageTasks |
-| `build/lib/extensions.ts` | `excludedExtensions` extended with the drop list above |
+| `build/lib/extensions.ts` | `excludedExtensions` extended with the drop list above; `esbuildMediaScripts` narrows webview-media to markdown preview/math + mermaid (notebook, simple-browser, ipynb media dropped) |
 | `product.json` | `builtInExtensions` = js-debug trio (restored from upstream); `extensionsGallery` added → Open VSX; copilot-authored config deleted: `defaultChatAgent`, `trustedExtensionAuthAccess`, `builtInExtensionsEnabledWithAutoUpdates` (all references shipped `GitHub.copilot*`), `voiceWsUrl` (MS voice service) |
 | `src/vs/platform/extensionManagement/{common/extensionGalleryService.ts,common/abstractExtensionManagementService.ts}`, `src/vs/workbench/{contrib/extensions/browser/extensionsWorkbenchService.ts,services/accounts/browser/defaultAccount.ts,contrib/welcomeOnboarding/browser/onboardingVariationA.ts,contrib/chat/browser/widget/chatWidget.ts}` | Null-guards for the readers of `product.defaultChatAgent` that dereferenced it unconditionally (gallery queries bundling the chat extension, uninstall paths, BlockStartup default-account contribution, onboarding module-load assert, chat widget welcome). Readers that run only inside chat-disabled chat UI stay upstream — the whole path is inert with `chat.disableAIFeatures` |
 | `src/vs/code/browser/workbench/workbench.html` | Dark first paint: `color-scheme: dark` + inline body `#121618` |
@@ -173,13 +173,16 @@ Machine gotcha notes restraints:
   mounts the twin iframe *under* the boot hero, lifting the hero only after
   the iframe's `load` event + `BOOT_SETTLE_MS` (1.2s) — the anti-flash wait
   that keeps the twin's unstyled boot window out of the pane.
-- **Twin dist** — `../scripts/prepare-vscode-twin.sh` stages
-  `vscode-reh-web-linux-x64` as `.vscode-twin/dist` (the REH-web artifact is
-  self-contained: server binary plus the workbench it serves).
+- **Twin dist** — the REH-web artifact is self-contained: server binary
+  plus the workbench it serves. `dsh-api-ide` discovers it in place: the
+  `<harness>/../vscode-reh-web-linux-x64` gulp lane beside this checkout is
+  the first discovery candidate, so no staging step exists (delete the old
+  `.vscode-twin/dist` copies; they only shadow a stale build).
 
 ```sh
 cd deepseek-harness-web-editor-m1
-DSH_VSCODE_TWIN_DIST=/home/snguyen/dev/digitalocean/idk/.vscode-twin/dist pnpm dsh web --no-open
+pnpm dsh web --no-open   # discovers ../vscode-reh-web-linux-x64 automatically
+# to pin a specific dist instead: DSH_VSCODE_TWIN_DIST=<path> pnpm dsh web --no-open
 ```
 
 ## License / hosting posture
