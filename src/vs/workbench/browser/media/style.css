@@ -363,9 +363,9 @@ body {
 /* ----- DSH glass frame (web client) -----
  * Opt in via ?dshGlass=1 (see workbench.html): the workbench fills its
  * rendering slot edge to edge and lets the embedding host page (the
- * harness ocean scene) show through — html/body and the workbench root
- * stay transparent, while the parts dim through theme color overrides
- * so text keeps contrast over whatever the host paints behind. */
+ * harness ocean scene) show through — html/body, the workbench root and
+ * every part stay fully transparent, sharing the exact no-background
+ * treatment the host's own floating cards (the chat window) use. */
 html.dsh-glass,
 html.dsh-glass body {
 	background-color: transparent !important;
@@ -377,48 +377,60 @@ html.dsh-glass .monaco-workbench {
 	 * declaration, so glass needs !important to actually transluce.
 	 * --vscode-surface-background joins the set: the floating-panel cards
 	 * paint from the surface tokens, not the sidebar one. */
-	--vscode-editor-background: rgba(30, 30, 30, 0.55) !important;
-	--vscode-sideBar-background: rgba(27, 31, 33, 0.72) !important;
-	--vscode-surface-background: rgba(27, 31, 33, 0.72) !important;
-	--vscode-activityBar-background: rgba(27, 31, 33, 0.85) !important;
-	--vscode-titleBar-activeBackground: rgba(27, 31, 33, 0.85) !important;
-	--vscode-titleBar-inactiveBackground: rgba(27, 31, 33, 0.85) !important;
-	--vscode-statusBar-background: rgba(27, 31, 33, 0.85) !important;
-	--vscode-panel-background: rgba(27, 31, 33, 0.72) !important;
+	--vscode-editor-background: transparent !important;
+	--vscode-sideBar-background: transparent !important;
+	--vscode-surface-background: transparent !important;
+	--vscode-activityBar-background: transparent !important;
+	--vscode-titleBar-activeBackground: transparent !important;
+	--vscode-titleBar-inactiveBackground: transparent !important;
+	--vscode-statusBar-background: transparent !important;
+	--vscode-panel-background: transparent !important;
+	/* Widget surfaces follow the parts: transparent like the host's chat
+	 * window, which paints no background at all. Controls (buttons,
+	 * badges) and state washes (selection, hover, scrollbars) keep their
+	 * fills so they still read as affordances. */
+	--vscode-minimap-background: transparent !important;
+	--vscode-editorGroupHeader-background: transparent !important;
+	--vscode-editorGroupHeader-tabsBackground: transparent !important;
+	--vscode-editorStickyScroll-background: transparent !important;
+	--vscode-breadcrumb-background: transparent !important;
+	--vscode-tab-activeBackground: transparent !important;
+	--vscode-tab-inactiveBackground: transparent !important;
+	--vscode-peekViewEditor-background: transparent !important;
+	--vscode-editorWidget-background: transparent !important;
+	--vscode-editorHoverWidget-background: transparent !important;
+	--vscode-editorSuggestWidget-background: transparent !important;
+	--vscode-dropdown-background: transparent !important;
+	--vscode-input-background: transparent !important;
+	--vscode-menu-background: transparent !important;
+	--vscode-quickInput-background: transparent !important;
+	--vscode-notification-background: transparent !important;
+	--vscode-terminal-background: transparent !important;
+	/* The one glass container template: every window shares these tokens.
+	 * Values mirror the host chat window — ui-theme's dark elevation pair
+	 * (0.5px hairline stroke in border-l4 plus two soft glows) on the
+	 * frame's 14px card radius; floatingPanels.css dresses its floating
+	 * windows from these same tokens, so background and outline both have
+	 * a single source of truth. */
+	--dsh-glass-stroke-color: rgba(247, 248, 248, 0.2);
+	--dsh-glass-card-radius: 14px;
+	--dsh-glass-card-elevation:
+		0 0 0 0.5px var(--dsh-glass-stroke-color),
+		0 3px 8px 0 rgba(0, 0, 0, 0.03),
+		0 0 16px 0 rgba(0, 0, 0, 0.02);
 	background-color: transparent !important;
-	backdrop-filter: blur(14px);
-	-webkit-backdrop-filter: blur(14px);
 }
 
 /* updateStyles() paints every part surface as a concrete inline color, and
- * inline beats any non-!important stylesheet rule — the glass variables
- * above only reach the parts through these re-routes. Only the sidebar and
- * panel already had !important var rules (floatingPanels.css) before
- * floating mode: these cover all seven uniformly so every window of the
- * workbench is glass, matching the host's floating-card architecture. */
-html.dsh-glass .monaco-workbench .part.sidebar,
-html.dsh-glass .monaco-workbench .part.auxiliarybar {
-	background-color: var(--vscode-sideBar-background) !important;
-}
-
-html.dsh-glass .monaco-workbench .part.panel {
-	background-color: var(--vscode-panel-background) !important;
-}
-
-html.dsh-glass .monaco-workbench .part.editor {
-	background-color: var(--vscode-editor-background) !important;
-}
-
-html.dsh-glass .monaco-workbench .part.activitybar {
-	background-color: var(--vscode-activityBar-background) !important;
-}
-
-html.dsh-glass .monaco-workbench .part.titlebar {
-	background-color: var(--vscode-titleBar-activeBackground) !important;
+ * inline beats any non-!important stylesheet rule — one :is() re-route
+ * forces every workbench window back to the template's transparent
+ * background uniformly, matching the host's floating-card architecture
+ * (and the chat window itself). */
+html.dsh-glass .monaco-workbench .part:is(.sidebar, .auxiliarybar, .panel, .editor, .activitybar, .titlebar, .statusbar) {
+	background-color: transparent !important;
 }
 
 html.dsh-glass .monaco-workbench .part.statusbar {
-	background-color: var(--vscode-statusBar-background) !important;
 	border-top-color: transparent !important;
 }
 
