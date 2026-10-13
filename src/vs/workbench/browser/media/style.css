@@ -385,70 +385,19 @@ html.dsh-glass .monaco-workbench {
 	--vscode-titleBar-inactiveBackground: transparent !important;
 	--vscode-statusBar-background: transparent !important;
 	--vscode-panel-background: transparent !important;
-	/* Widget surfaces follow the parts: transparent like the host's chat
-	 * window, which paints no background at all. Controls (buttons,
-	 * badges) and state washes (selection, hover, scrollbars) keep their
-	 * fills so they still read as affordances. */
-	--vscode-minimap-background: transparent !important;
-	--vscode-editorGroupHeader-background: transparent !important;
-	--vscode-editorGroupHeader-tabsBackground: transparent !important;
-	--vscode-editorStickyScroll-background: transparent !important;
-	--vscode-breadcrumb-background: transparent !important;
-	--vscode-tab-activeBackground: transparent !important;
-	--vscode-tab-inactiveBackground: transparent !important;
-	--vscode-peekViewEditor-background: transparent !important;
-	--vscode-editorWidget-background: transparent !important;
-	--vscode-editorHoverWidget-background: transparent !important;
-	--vscode-editorSuggestWidget-background: transparent !important;
-	--vscode-dropdown-background: transparent !important;
-	--vscode-input-background: transparent !important;
-	--vscode-menu-background: transparent !important;
-	--vscode-quickInput-background: transparent !important;
-	--vscode-notification-background: transparent !important;
-	--vscode-terminal-background: transparent !important;
-	/* Remaining surfaces off the registry defaults: unfocused tab variants,
-	 * statusbar states, peek views, banners, hovers and the misc widgets
-	 * the DO theme never named — the full transparent motif. */
-	--vscode-tab-hoverBackground: transparent !important;
-	--vscode-tab-unfocusedActiveBackground: transparent !important;
-	--vscode-tab-unfocusedInactiveBackground: transparent !important;
-	--vscode-editor-lineHighlightBackground: transparent !important;
-	--vscode-editor-foldBackground: transparent !important;
-	--vscode-statusBar-debuggingBackground: transparent !important;
-	--vscode-statusBar-noFolderBackground: transparent !important;
-	--vscode-statusBar-prominentBackground: transparent !important;
-	--vscode-commandCenter-background: transparent !important;
-	--vscode-banner-background: transparent !important;
-	--vscode-editorHoverWidget-statusBarBackground: transparent !important;
-	--vscode-peekView-background: transparent !important;
-	--vscode-peekViewTitle-background: transparent !important;
-	--vscode-peekViewResult-background: transparent !important;
-	--vscode-walkThrough-embeddedEditorBackground: transparent !important;
-	--vscode-debugToolBar-background: transparent !important;
-	--vscode-keybindingLabel-background: transparent !important;
-	--vscode-listFilterWidget-background: transparent !important;
-	--vscode-list-hoverBackground: transparent !important;
-	--vscode-list-focusBackground: transparent !important;
-	--vscode-dropdown-listBackground: transparent !important;
-	/* The one glass container template: every window shares these tokens.
-	 * Values mirror the host chat window — ui-theme's dark elevation pair
-	 * (0.5px hairline stroke in border-l4 plus two soft glows) on the
-	 * frame's 14px card radius; floatingPanels.css dresses its floating
-	 * windows from these same tokens, so background and outline both have
-	 * a single source of truth. */
+	/* The one container template: every slot window shares these outline
+	 * tokens — ui-theme's dark elevation pair (0.5px hairline stroke in
+	 * border-l4 plus two soft glows) on the frame's 14px card radius;
+	 * floatingPanels.css dresses its floating windows from the same
+	 * tokens. Every non-slot surface (tabs, widgets, menus, terminal,
+	 * inputs…) keeps the DO walrus black/grey theme fills. */
 	--dsh-glass-stroke-color: rgba(247, 248, 248, 0.2);
 	--dsh-glass-card-radius: 14px;
-	--dsh-glass-blur: blur(24px) saturate(1.35);
 	--dsh-glass-card-elevation:
 		0 0 0 0.5px var(--dsh-glass-stroke-color),
 		0 3px 8px 0 rgba(0, 0, 0, 0.03),
 		0 0 16px 0 rgba(0, 0, 0, 0.02);
 	background-color: transparent !important;
-	/* Frosted glass: the transparent client blurs the host's ocean scene
-	 * behind it — the glass motif the host's own surfaces share
-	 * (--dsh-glass-blur, ui-theme). */
-	backdrop-filter: var(--dsh-glass-blur);
-	-webkit-backdrop-filter: var(--dsh-glass-blur);
 }
 
 /* updateStyles() paints every part surface as a concrete inline color, and
