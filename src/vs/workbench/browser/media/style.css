@@ -438,11 +438,17 @@ html.dsh-glass .monaco-workbench {
 	 * a single source of truth. */
 	--dsh-glass-stroke-color: rgba(247, 248, 248, 0.2);
 	--dsh-glass-card-radius: 14px;
+	--dsh-glass-blur: blur(14px);
 	--dsh-glass-card-elevation:
 		0 0 0 0.5px var(--dsh-glass-stroke-color),
 		0 3px 8px 0 rgba(0, 0, 0, 0.03),
 		0 0 16px 0 rgba(0, 0, 0, 0.02);
 	background-color: transparent !important;
+	/* Frosted glass: the transparent client blurs the host's ocean scene
+	 * behind it — the glass motif the host's own surfaces share
+	 * (--dsh-glass-blur, ui-theme). */
+	backdrop-filter: var(--dsh-glass-blur);
+	-webkit-backdrop-filter: var(--dsh-glass-blur);
 }
 
 /* updateStyles() paints every part surface as a concrete inline color, and
