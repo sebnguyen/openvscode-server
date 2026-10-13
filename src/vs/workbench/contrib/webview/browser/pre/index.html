@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 
 	<meta http-equiv="Content-Security-Policy"
-		content="default-src 'none'; script-src 'sha256-sn80KfA+MU1XygyWiC6Pi0aLZubC6RmEK+O6llFPkGg=' 'self'; frame-src 'self'; style-src 'unsafe-inline';">
+		content="default-src 'none'; script-src 'sha256-t2egZ8rS0ZZ7g/OACkXvuxTkkUZOU5Nor4kpj6MBqYI=' 'self'; frame-src 'self'; style-src 'unsafe-inline';">
 
 	<!-- Disable pinch zooming -->
 	<meta name="viewport"
@@ -266,7 +266,7 @@
 			}
 
 			const swPath = encodeURI(`service-worker.js?v=${expectedWorkerVersion}&vscode-resource-base-authority=${searchParams.get('vscode-resource-base-authority')}&remoteAuthority=${searchParams.get('remoteAuthority') ?? ''}&platform=${searchParams.get('platform')}`);
-			navigator.serviceWorker.register(swPath, { type: 'module', updateViaCache: 'none' })
+			navigator.serviceWorker.register(swPath)
 				.then(async registration => {
 					if (navigator.serviceWorker.controller) {
 						// A previous SW is already controlling. Force an update
@@ -344,6 +344,17 @@
 				const parentOrigin = searchParams.get('parentOrigin');
 
 				const hostname = location.hostname;
+
+				// DSH: the webview shell is served from this workbench's own origin
+				// (webviewEndpoint is host-relative), so uuid-subdomain isolation
+				// does not apply — accept a same-host parent outright, the same
+				// local-hosting shortcut code-server applies.
+				try {
+					const parentHost = parentOrigin && new URL(parentOrigin).hostname;
+					if (parentHost && parentHost === hostname) {
+						return start(parentOrigin);
+					}
+				} catch { /* fall through to upstream validation */ }
 
 				if (!crypto.subtle) {
 					// cannot validate, not running in a secure context

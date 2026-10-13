@@ -416,6 +416,13 @@ export class WebClientServer {
 		const workbenchWebConfiguration = {
 			remoteAuthority,
 			serverBasePath: basePath,
+			// DSH: stream webview shells (markdown preview, mermaid, media) from
+			// this server instead of Microsoft's vscode-cdn.net — the CDN only
+			// serves signed upstream builds, so the default product.json
+			// webviewContentExternalBaseUrlTemplate 404s every webview iframe on
+			// an OSS twin (empty preview forever). webviewElement resolves this
+			// root-relative endpoint against the page origin.
+			webviewEndpoint: posix.join(staticRoute, 'out/vs/workbench/contrib/webview/browser/pre/'),
 			// Harness twin: the first-paint hint — dark boot colors hold until the real
 			// theme (DO Harness Dark via configurationDefaults) is loaded and applied,
 			// in the spirit of `configurationDefaults` colors, per web.api.ts.

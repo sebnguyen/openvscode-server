@@ -239,7 +239,10 @@ export class BrowserWorkbenchEnvironmentService implements IBrowserWorkbenchEnvi
 
 	@memoize
 	get webviewExternalEndpoint(): string {
-		const endpoint = this.options.webviewEndpoint
+		// DSH: resolve root-relative webviewEndpoint against the page so the
+		// origin checks in webviewElement see a proper absolute URL (same
+		// approach as code-server's patches/webview.diff).
+		const endpoint = (this.options.webviewEndpoint && new URL(this.options.webviewEndpoint, window.location.toString()).toString())
 			|| this.productService.webviewContentExternalBaseUrlTemplate
 			|| 'https://{{uuid}}.vscode-cdn.net/{{quality}}/{{commit}}/out/vs/workbench/contrib/webview/browser/pre/';
 
