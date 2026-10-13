@@ -67,12 +67,14 @@ the same html patch applied directly to its built copy.
 ### Markdown
 - `markdown-language-features` — preview, outline, links
 - `markdown-math` — KaTeX in preview
+- `mermaid-markdown-features` — mermaid fences rendered in markdown preview
 
 ### Configuration
 - `configuration-editing` — settings.json intellisense
 
-### Media bundles
-- Only markdown preview + math media (notebook, mermaid, simple-browser webviews stripped — ~47 MB saved)
+### Media / preview
+- `media-preview` — image/audio/video viewer for files opened in the editor
+- Media bundles: markdown preview + math + mermaid + media-preview (notebook and simple-browser webviews still stripped — ~45 MB saved)
 
 ### Extension ecosystem
 - Extension host with full extension API (stable + workspace-kind extensions run server-side on the REH)
@@ -83,9 +85,9 @@ the same html patch applied directly to its built copy.
 | Removed | Reason |
 |---|---|
 | `copilot` (in-tree GitHub Copilot pipeline incl. ripgrep-shim packaging hook) | Was the failing packaging step; AI comes from the DSH harness |
-| `github`, `microsoft-authentication` | MS auth providers; plain git works without them |
+| `microsoft-authentication` | MS account auth provider; nothing in the twin signs in |
 | `ipynb`, `notebook-renderers` | Notebook surfaces out of scope |
-| `mermaid-markdown-features`, `media-preview`, `simple-browser` | Heavy webview renderers |
+| `simple-browser` | In-product web-page renderer; out of scope |
 | `php-language-features`, `extension-editing` | Language extras out of scope |
 | `grunt`, `gulp`, `jake`, `npm`, `search-result`, `references-view`, `merge-conflict`, `terminal-suggest`, `tunnel-forwarding`, `emmet` | Slimming scope |
 | `js-debug` had been dropped once — restored as part of scope | — |
@@ -96,7 +98,8 @@ the same html patch applied directly to its built copy.
 |---|---|
 | `build/gulpfile.reh.ts` | Removed `compileCopilotExtensionBuildTask` from REH composition and the `prepareCopilotRipgrepShimTaskREH` hook from packageTasks |
 | `build/lib/extensions.ts` | `excludedExtensions` extended with the drop list above |
-| `product.json` | `builtInExtensions` = js-debug trio (restored from upstream); `extensionsGallery` added → Open VSX |
+| `product.json` | `builtInExtensions` = js-debug trio (restored from upstream); `extensionsGallery` added → Open VSX; copilot-authored config deleted: `defaultChatAgent`, `trustedExtensionAuthAccess`, `builtInExtensionsEnabledWithAutoUpdates` (all references shipped `GitHub.copilot*`), `voiceWsUrl` (MS voice service) |
+| `src/vs/platform/extensionManagement/{common/extensionGalleryService.ts,common/abstractExtensionManagementService.ts}`, `src/vs/workbench/{contrib/extensions/browser/extensionsWorkbenchService.ts,services/accounts/browser/defaultAccount.ts,contrib/welcomeOnboarding/browser/onboardingVariationA.ts,contrib/chat/browser/widget/chatWidget.ts}` | Null-guards for the readers of `product.defaultChatAgent` that dereferenced it unconditionally (gallery queries bundling the chat extension, uninstall paths, BlockStartup default-account contribution, onboarding module-load assert, chat widget welcome). Readers that run only inside chat-disabled chat UI stay upstream — the whole path is inert with `chat.disableAIFeatures` |
 | `src/vs/code/browser/workbench/workbench.html` | Dark first paint: `color-scheme: dark` + inline body `#121618` |
 | `src/vs/server/node/webClientServer.ts` | `initialColorTheme` boot colors; `configurationDefaults` block with startup-critical identity keys (`workbench.startupEditor: none`, `workbench.tips.enabled`, `workbench.secondarySideBar.defaultVisibility: hidden`, `chat.disableAIFeatures`, `workbench.experimental.modernUI: true`) — the extension channel races LayoutStateModel construction and would flash the welcome page / open the aux bar once per fresh profile |
 | `src/vs/workbench/browser/parts/editor/media/letterpress-*.svg` (×4) | OSS letterpress replaced with the DO twinkle pixel mark — the coverage-derived 16-grid face emitted by the harness generator (`node design/pixel-do-loader-gen.mjs` in the sibling repo), `fill #7bb4bc` dark / `#2e565e` light — the only mark in the empty editor |

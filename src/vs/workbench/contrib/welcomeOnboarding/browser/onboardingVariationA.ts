@@ -10,7 +10,7 @@ import { isCancellationError } from '../../../../base/common/errors.js';
 import { StopWatch } from '../../../../base/common/stopwatch.js';
 import { URI } from '../../../../base/common/uri.js';
 import { isWindows, isMacintosh, isLinux } from '../../../../base/common/platform.js';
-import { assertDefined } from '../../../../base/common/types.js';
+import type { IDefaultChatAgent } from '../../../../base/common/product.js';
 import { FileAccess } from '../../../../base/common/network.js';
 import { ILayoutService } from '../../../../platform/layout/browser/layoutService.js';
 import { KeyCode } from '../../../../base/common/keyCodes.js';
@@ -78,8 +78,9 @@ type OnboardingActionEvent = {
 
 type EnterpriseSignInUiState = 'options' | 'instance' | 'progress';
 
-assertDefined(product.defaultChatAgent, 'Onboarding requires a default chat agent product configuration.');
-const defaultChat = product.defaultChatAgent;
+// DSH: product.json carries no defaultChatAgent (copilot-free twin); onboarding is a dev/gated path, so degrade to an empty config instead of asserting at module load.
+// eslint-disable-next-line local/code-no-dangerous-type-assertions
+const defaultChat = product.defaultChatAgent ?? ({} as unknown as IDefaultChatAgent);
 
 /**
  * Variation A — Classic Wizard Modal
