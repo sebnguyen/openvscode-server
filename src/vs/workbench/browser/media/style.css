@@ -364,8 +364,9 @@ body {
  * Opt in via ?dshGlass=1 (see workbench.html): the workbench fills its
  * rendering slot edge to edge and lets the embedding host page (the
  * harness ocean scene) show through — html/body, the workbench root and
- * every part stay fully transparent, sharing the exact no-background
- * treatment the host's own floating cards (the chat window) use. */
+ * every part stay completely transparent and unstyled; the resilient
+ * transparent-glazed outline lives on the host's .frameslot wrapper that
+ * registers this mount onto the app frame grid. */
 html.dsh-glass,
 html.dsh-glass body {
 	background-color: transparent !important;
@@ -393,16 +394,11 @@ html.dsh-glass .monaco-workbench {
 	 * inputs…) keeps the DO walrus black/grey theme fills. */
 	--dsh-glass-stroke-color: rgba(247, 248, 248, 0.2);
 	--dsh-glass-card-radius: 14px;
-	--dsh-glass-blur: blur(24px) saturate(1.35);
 	--dsh-glass-card-elevation:
 		0 0 0 0.5px var(--dsh-glass-stroke-color),
 		0 3px 8px 0 rgba(0, 0, 0, 0.03),
 		0 0 16px 0 rgba(0, 0, 0, 0.02);
 	background-color: transparent !important;
-	/* Frosted glass: the transparent slot windows blur the host's ocean
-	 * behind them — the same --dsh-glass-blur recipe the host slots use. */
-	backdrop-filter: var(--dsh-glass-blur);
-	-webkit-backdrop-filter: var(--dsh-glass-blur);
 }
 
 /* updateStyles() paints every part surface as a concrete inline color, and
