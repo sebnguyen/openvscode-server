@@ -31,20 +31,22 @@ const root = path.dirname(path.dirname(import.meta.dirname));
 // const sourceMappingURLBase = `https://main.vscode-cdn.net/sourcemaps/${commit}`;
 
 function minifyExtensionResources(input: Stream): Stream {
-	const jsonFilter = filter(['**/*.json', '**/*.code-snippets'], { restore: true });
+	// Single-pass minify: the gulp-filter restore branch never emits 'end' for
+	// streams carrying many matched+unmatched files on node 24 (it stalled the
+	// REH-web lane right after the marketplace downloads). Same JSON minify
+	// semantics without the filter/restore split.
 	return input
-		.pipe(jsonFilter)
-		.pipe(buffer())
 		.pipe(es.mapSync((f: File) => {
-			const errors: jsoncParser.ParseError[] = [];
-			const value = jsoncParser.parse(f.contents!.toString('utf8'), errors, { allowTrailingComma: true });
-			if (errors.length === 0) {
-				// file parsed OK => just stringify to drop whitespace and comments
-				f.contents = Buffer.from(JSON.stringify(value));
+			if (/\.(?:json|code-snippets)$/.test(f.relative)) {
+				const errors: jsoncParser.ParseError[] = [];
+				const value = jsoncParser.parse(f.contents!.toString('utf8'), errors, { allowTrailingComma: true });
+				if (errors.length === 0) {
+					// file parsed OK => just stringify to drop whitespace and comments
+					f.contents = Buffer.from(JSON.stringify(value));
+				}
 			}
 			return f;
-		}))
-		.pipe(jsonFilter.restore);
+		}));
 }
 
 function updateExtensionPackageJSON(input: Stream, update: (data: any) => any): Stream {
