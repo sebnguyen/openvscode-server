@@ -324,8 +324,8 @@ import './contrib/extensions/browser/extensionsViewlet.js';
 import './contrib/output/browser/output.contribution.js';
 import './contrib/output/browser/outputView.js';
 
-// Terminal
-import './contrib/terminal/terminal.all.js';
+// Terminal — DSH strip: twin lane uses the chat-free contribution list.
+import './contrib/terminal/terminal.all.twin.js';
 
 // External terminal
 import './contrib/externalTerminal/browser/externalTerminal.contribution.js';

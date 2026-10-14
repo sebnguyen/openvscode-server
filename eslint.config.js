@@ -2059,6 +2059,13 @@ export default defineConfig(
 					]
 				},
 				{
+					'target': 'src/vs/workbench/contrib/terminal/terminal.all.twin.ts',
+					'layer': 'browser',
+					'restrictions': [
+						'vs/workbench/contrib/**'
+					]
+				},
+				{
 					'target': 'src/vs/workbench/contrib/terminal/terminalContribChatExports.ts',
 					'layer': 'browser',
 					'restrictions': [
@@ -2088,6 +2095,7 @@ export default defineConfig(
 						'vs/workbench/services/*/~',
 						'vs/workbench/contrib/*/~',
 						'vs/workbench/contrib/terminal/terminal.all.js',
+						'vs/workbench/contrib/terminal/terminal.all.twin.js',
 					]
 				},
 				{
