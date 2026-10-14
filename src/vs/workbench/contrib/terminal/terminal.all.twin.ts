@@ -17,6 +17,9 @@
 // Primary workbench contribution
 import './browser/terminal.contribution.js';
 
+// Null services for the chat ids the strip unregistered (see file)
+import './browser/nullTerminalChatServices.js';
+
 // Misc extensions to the workbench contribution
 import './common/environmentVariable.contribution.js';
 import './common/terminalExtensionPoints.contribution.js';
