@@ -447,14 +447,13 @@ export class WebClientServer {
 				'workbench.secondarySideBar.defaultVisibility': 'hidden',
 				'chat.disableAIFeatures': true,
 				'workbench.experimental.modernUI': true,
-				// DSH: track the host color scheme — upstream leaves the workbench
-				// pinned on Light 2026 in headless/iframe contexts, which showed
-				// rimmed-white markdown previews + dark-on-white mermaid on top of
-				// the harness's dark glass. Defaults, not locks: the twin Settings
-				// UI still overrides.
-				'workbench.preferredLightColorTheme': 'Light 2026',
-				'workbench.preferredDarkColorTheme': 'Dark 2026',
-				'window.autoDetectColorScheme': true,
+				// DSH: pin the DO dark theme — default, not a lock. Auto-detect
+				// (Light 2026 on light-OS hosts) left the markdown preview +
+				// mermaid white inside the dark harness chrome; the twin's
+				// identity is dark everywhere, so the server-side default is Dark
+				// 2026 with auto-detect off. The twin Settings UI still overrides.
+				'workbench.colorTheme': 'Dark 2026',
+				'window.autoDetectColorScheme': false,
 			},
 			_wrapWebWorkerExtHostInIframe,
 			developmentOptions: { enableSmokeTestDriver: this._environmentService.args['enable-smoke-test-driver'] ? true : undefined, logLevel: this._logService.getLevel() },
