@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 
 	<meta http-equiv="Content-Security-Policy"
-		content="default-src 'none'; script-src 'sha256-t2egZ8rS0ZZ7g/OACkXvuxTkkUZOU5Nor4kpj6MBqYI=' 'self'; frame-src 'self'; style-src 'unsafe-inline';">
+		content="default-src 'none'; script-src 'sha256-yfMFaXF2IuocOuj9BjORjR4ATapNhgwflKsitAN/iaM=' 'self'; frame-src 'self'; style-src 'unsafe-inline';">
 
 	<!-- Disable pinch zooming -->
 	<meta name="viewport"
@@ -121,7 +121,12 @@
 
 			body {
 				overscroll-behavior-x: none;
-				background-color: transparent;
+				/* The nested webview documents carry no color-scheme meta (the
+				 * workbench shell does), so an unpainted body propagates the
+				 * iframe's default WHITE canvas and dark-theme text floats
+				 * white-on-white. Paint the editor background instead: themed in
+				 * every scheme, and content styles still override freely. */
+				background-color: var(--vscode-editor-background);
 				color: var(--vscode-editor-foreground);
 				font-family: var(--vscode-font-family);
 				font-weight: var(--vscode-font-weight);
