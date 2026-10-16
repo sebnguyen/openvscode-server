@@ -41,6 +41,22 @@ against it. Two source-level patches cover the two flash windows:
 Both land via rebuilds; the currently staged `../.vscode-twin/dist` carries
 the same html patch applied directly to its built copy.
 
+### Checkpoint timeline bar (editor group top strip)
+
+`src/vs/workbench/contrib/dshCheckpointBar/browser/dshCheckpointBar.contribution.ts`
+plus one import in `src/vs/workbench/workbench.common.main.ts` — the
+whole-fork inventory for this feature. A slim bar mounts at the top of each
+editor group when the active editor names a workspace file with checkpoint
+slots. The bar holds no checkpoint state itself: it renders by invoking
+commands the harness planes register over the boundary
+(`do-harness.timeline.describe/prev/next/openStop`), and re-reads when the
+extension fires `do-harness.timeline.barRefresh`. Nothing in
+`vscode.core`/`editor` internals was edited. Pitfalls encountered while
+landing it: the fork's `IEditorGroupsService` spells its events
+`onDidChangeActiveGroup` / `onDidAddGroup`; per-file refresh rides
+`group.onDidActiveEditorChange`; a constructor throw on a missing event
+signing leaves the contribution's DOM mounted but its tails dead.
+
 ## Kept functionality
 
 ### Workbench core (client bundle)

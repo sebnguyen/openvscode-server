@@ -207,6 +207,8 @@ import './services/policies/browser/policyTelemetry.contribution.js';
 
 // Telemetry
 import './contrib/telemetry/browser/telemetry.contribution.js';
+// DO Harness patch: the checkpoint timeline bar (see the file's header).
+import './contrib/dshCheckpointBar/browser/dshCheckpointBar.contribution.js';
 
 // Preferences
 import './contrib/preferences/browser/preferences.contribution.js';
