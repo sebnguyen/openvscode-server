@@ -41,6 +41,14 @@ against it. Two source-level patches cover the two flash windows:
 Both land via rebuilds; the currently staged `../.vscode-twin/dist` carries
 the same html patch applied directly to its built copy.
 
+## Typography standard
+
+Inter (UI) and JetBrains Mono (code) are the product faces on both the harness
+page and the twin. The fork bundles both and pins them in
+`src/vs/workbench/browser/media/style.css`; the harness ships the same files
+from `apps/web/public/fonts/`. A workbench CSS change needs a twin rebuild and
+a product `commit` rotation (see the cache trap below).
+
 ### Checkpoint timeline bar (editor group top strip)
 
 `src/vs/workbench/contrib/dshCheckpointBar/browser/dshCheckpointBar.contribution.ts`
@@ -114,12 +122,16 @@ signing leaves the contribution's DOM mounted but its tails dead.
 |---|---|
 | `build/gulpfile.reh.ts` | Removed `compileCopilotExtensionBuildTask` from REH composition and the `prepareCopilotRipgrepShimTaskREH` hook from packageTasks |
 | `build/lib/extensions.ts` | `excludedExtensions` extended with the drop list above; `esbuildMediaScripts` narrows webview-media to markdown preview/math + mermaid (notebook, simple-browser, ipynb media dropped) |
+| `build/next/index.ts` | `.woff`/`.woff2` added to the esbuild loader map, so the workbench `@font-face` files are emitted to `out/media/` beside the CSS. |
 | `product.json` | `builtInExtensions` = js-debug trio (restored from upstream); `extensionsGallery` added → Open VSX; copilot-authored config deleted: `defaultChatAgent`, `trustedExtensionAuthAccess`, `builtInExtensionsEnabledWithAutoUpdates` (all references shipped `GitHub.copilot*`), `voiceWsUrl` (MS voice service) |
 | `src/vs/platform/extensionManagement/{common/extensionGalleryService.ts,common/abstractExtensionManagementService.ts}`, `src/vs/workbench/{contrib/extensions/browser/extensionsWorkbenchService.ts,services/accounts/browser/defaultAccount.ts,contrib/welcomeOnboarding/browser/onboardingVariationA.ts,contrib/chat/browser/widget/chatWidget.ts}` | Null-guards for the readers of `product.defaultChatAgent` that dereferenced it unconditionally (gallery queries bundling the chat extension, uninstall paths, BlockStartup default-account contribution, onboarding module-load assert, chat widget welcome). Readers that run only inside chat-disabled chat UI stay upstream — the whole path is inert with `chat.disableAIFeatures` |
 | `src/vs/code/browser/workbench/workbench.html` | Dark first paint: `color-scheme: dark` + inline body `#121618` |
 | `src/vs/server/node/webClientServer.ts` | `initialColorTheme` boot colors; `configurationDefaults` block with startup-critical identity keys (`workbench.startupEditor: none`, `workbench.tips.enabled`, `workbench.secondarySideBar.defaultVisibility: hidden`, `chat.disableAIFeatures`, `workbench.experimental.modernUI: true`) — the extension channel races LayoutStateModel construction and would flash the welcome page / open the aux bar once per fresh profile |
 | `src/vs/workbench/browser/parts/editor/media/letterpress-*.svg` (×4) | OSS letterpress replaced with the DO twinkle pixel mark — the coverage-derived 16-grid face emitted by the harness generator (`node design/pixel-do-loader-gen.mjs` in the sibling repo), `fill #7bb4bc` dark / `#2e565e` light — the only mark in the empty editor |
 | `src/vs/workbench/browser/parts/titlebar/titlebarPart.ts` + `media/titlebarpart.css` | OSS titlebar-left `window-appicon` (35px OSS code icon) deleted — element never created, rules removed |
+| `src/vs/workbench/browser/media/style.css` + `media/{inter,jetbrains-mono}-variable.woff2` | Typography standard: Inter is the UI face and JetBrains Mono the code face. Two `@font-face` blocks; `"Inter"` leads every platform UI stack; `"JetBrains Mono"` leads `--monaco-monospace-font`. The woff2 files sit beside the CSS and esbuild emits them to `out/media/`. |
+| `src/vs/base/browser/fonts.ts` | `DEFAULT_FONT_FAMILY` leads with `"Inter"`, so webviews and input widgets follow the workbench. |
+| `src/vs/code/browser/workbench/workbench.ts` | Load both faces before `create()`, retrying until the stylesheet registers them; Monaco measures synchronously and would otherwise cache fallback metrics. |
 | `src/vs/workbench/browser/media/floatingPanels.css` | DSH block: `--vscode-cornerRadius-large: 14px` (the react frame's `--dsh-frame-card-radius`) and the ocean-scene backdrop (sea, god rays, two-pitch dot grid, depth fog) on `.monaco-workbench.floating-panels` + grid view; slow `dsh-ocean-drift` drift animation |
 | `src/vs/server/node/webClientServer.ts` | Webview self-hosting: `workbenchWebConfiguration.webviewEndpoint` → our own `/oss-<commit>/static/out/vs/workbench/contrib/webview/browser/pre/` (upstream ships `webviewContentExternalBaseUrlTemplate` pointed at Microsoft's signed-build CDN, which 404s every OSS commit) |
 | `src/vs/workbench/services/environment/browser/environmentService.ts` | Absolutize a root-relative `webviewEndpoint` against the page origin (code-server's `patches/webview.diff` approach) so webviewElement's strict origin parsing accepts it |

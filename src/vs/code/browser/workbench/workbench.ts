@@ -601,7 +601,7 @@ function readCookie(name: string): string | undefined {
 	return undefined;
 }
 
-(function () {
+(async function () {
 
 	// This script running at all means the page scripts were not blocked or rewritten.
 	// eslint-disable-next-line no-restricted-syntax
@@ -618,6 +618,34 @@ function readCookie(name: string): string | undefined {
 	const secretStorageKeyPath = readCookie('vscode-secret-key-path');
 	const secretStorageCrypto = secretStorageKeyPath && ServerKeyedAESCrypto.supported()
 		? new ServerKeyedAESCrypto(secretStorageKeyPath) : new TransparentCrypto();
+
+	// DSH typography: Monaco measures fonts synchronously, so load the two
+	// harness faces before the workbench creates any editor. The stylesheet may
+	// still be registering its @font-face rules when this module runs, so retry
+	// until each family resolves (or give up after a second). A failed load
+	// leaves the stacks below the first family in place.
+	const workbenchStylesheet = mainWindow.document.querySelector<HTMLLinkElement>('link[rel="stylesheet"][href*="workbench.css"]');
+	if (workbenchStylesheet !== null && workbenchStylesheet.sheet === null) {
+		await new Promise<void>(resolve => {
+			workbenchStylesheet.addEventListener('load', () => resolve(), { once: true });
+			workbenchStylesheet.addEventListener('error', () => resolve(), { once: true });
+		});
+	}
+
+	const loadHarnessFont = async (family: string): Promise<void> => {
+		for (let attempt = 0; attempt < 100; attempt++) {
+			const faces = await mainWindow.document.fonts.load(`16px "${family}"`);
+			if (faces.length > 0) {
+				return;
+			}
+			await new Promise<void>(resolve => mainWindow.setTimeout(resolve, 10));
+		}
+	};
+	try {
+		await Promise.all([loadHarnessFont('Inter'), loadHarnessFont('JetBrains Mono')]);
+	} catch (error) {
+		console.error('Failed to load the harness fonts', error);
+	}
 
 	// Create workbench
 	create(mainWindow.document.body, {
