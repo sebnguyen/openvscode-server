@@ -429,8 +429,8 @@ export class WebClientServer {
 			initialColorTheme: {
 				themeType: 'dark',
 				colors: {
-					'editor.background': '#171b1d',
-					'sideBar.background': '#1b1f21',
+					'editor.background': '#171c1e',
+					'sideBar.background': '#171c1e',
 					'activityBar.background': '#121618',
 					'statusBar.background': '#121618',
 				}
@@ -438,7 +438,7 @@ export class WebClientServer {
 			// Harness twin: the startup-critical identity defaults ride the product
 			// channel, not the staged extension — extension configurationDefaults only
 			// merge after the layout state model loads, so keys consumed at layout
-			// boot (welcome flash, auxiliary bar, the floating-window architecture)
+			// boot (welcome flash, auxiliary bar, the flat ruled-sheet layout)
 			// would race and misfire once per fresh profile. These are defaults, not
 			// locks: the twin's own Settings UI still overrides them.
 			configurationDefaults: {
@@ -446,7 +446,7 @@ export class WebClientServer {
 				'workbench.tips.enabled': false,
 				'workbench.secondarySideBar.defaultVisibility': 'hidden',
 				'chat.disableAIFeatures': true,
-				'workbench.experimental.modernUI': true,
+				'workbench.experimental.modernUI': false,
 				// DSH: pin the DO dark theme — default, not a lock. Auto-detect
 				// (Light 2026 on light-OS hosts) left the markdown preview +
 				// mermaid white inside the dark harness chrome; the twin's

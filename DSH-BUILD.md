@@ -126,25 +126,25 @@ signing leaves the contribution's DOM mounted but its tails dead.
 | `product.json` | `builtInExtensions` = js-debug trio (restored from upstream); `extensionsGallery` added → Open VSX; copilot-authored config deleted: `defaultChatAgent`, `trustedExtensionAuthAccess`, `builtInExtensionsEnabledWithAutoUpdates` (all references shipped `GitHub.copilot*`), `voiceWsUrl` (MS voice service) |
 | `src/vs/platform/extensionManagement/{common/extensionGalleryService.ts,common/abstractExtensionManagementService.ts}`, `src/vs/workbench/{contrib/extensions/browser/extensionsWorkbenchService.ts,services/accounts/browser/defaultAccount.ts,contrib/welcomeOnboarding/browser/onboardingVariationA.ts,contrib/chat/browser/widget/chatWidget.ts}` | Null-guards for the readers of `product.defaultChatAgent` that dereferenced it unconditionally (gallery queries bundling the chat extension, uninstall paths, BlockStartup default-account contribution, onboarding module-load assert, chat widget welcome). Readers that run only inside chat-disabled chat UI stay upstream — the whole path is inert with `chat.disableAIFeatures` |
 | `src/vs/code/browser/workbench/workbench.html` | Dark first paint: `color-scheme: dark` + inline body `#121618` |
-| `src/vs/server/node/webClientServer.ts` | `initialColorTheme` boot colors; `configurationDefaults` block with startup-critical identity keys (`workbench.startupEditor: none`, `workbench.tips.enabled`, `workbench.secondarySideBar.defaultVisibility: hidden`, `chat.disableAIFeatures`, `workbench.experimental.modernUI: true`) — the extension channel races LayoutStateModel construction and would flash the welcome page / open the aux bar once per fresh profile |
+| `src/vs/server/node/webClientServer.ts` | `initialColorTheme` boot colors; `configurationDefaults` block with startup-critical identity keys (`workbench.startupEditor: none`, `workbench.tips.enabled`, `workbench.secondarySideBar.defaultVisibility: hidden`, `chat.disableAIFeatures`, `workbench.experimental.modernUI: false`) — the extension channel races LayoutStateModel construction and would flash the welcome page / open the aux bar once per fresh profile |
 | `src/vs/workbench/browser/parts/editor/media/letterpress-*.svg` (×4) | OSS letterpress replaced with the DO twinkle pixel mark — the coverage-derived 16-grid face emitted by the harness generator (`node design/pixel-do-loader-gen.mjs` in the sibling repo), `fill #7bb4bc` dark / `#2e565e` light — the only mark in the empty editor |
 | `src/vs/workbench/browser/parts/titlebar/titlebarPart.ts` + `media/titlebarpart.css` | OSS titlebar-left `window-appicon` (35px OSS code icon) deleted — element never created, rules removed |
-| `src/vs/workbench/browser/media/style.css` + `media/{inter,jetbrains-mono}-variable.woff2` | Typography standard: Inter is the UI face and JetBrains Mono the code face. Two `@font-face` blocks; `"Inter"` leads every platform UI stack; `"JetBrains Mono"` leads `--monaco-monospace-font`. The woff2 files sit beside the CSS and esbuild emits them to `out/media/`. |
+| `src/vs/workbench/browser/media/style.css` + `media/{inter,jetbrains-mono}-variable.woff2` | Typography standard: Inter is the UI face and JetBrains Mono the code face. Two `@font-face` blocks; `"Inter"` leads every platform UI stack; `"JetBrains Mono"` leads `--monaco-monospace-font`. The woff2 files sit beside the CSS and esbuild emits them to `out/media/`. No DSH glass block: the workbench paints an opaque dark sheet. |
 | `src/vs/base/browser/fonts.ts` | `DEFAULT_FONT_FAMILY` leads with `"Inter"`, so webviews and input widgets follow the workbench. |
 | `src/vs/code/browser/workbench/workbench.ts` | Load both faces before `create()`, retrying until the stylesheet registers them; Monaco measures synchronously and would otherwise cache fallback metrics. |
-| `src/vs/workbench/browser/media/floatingPanels.css` | DSH block: `--vscode-cornerRadius-large: 14px` (the react frame's `--dsh-frame-card-radius`) and the ocean-scene backdrop (sea, god rays, two-pitch dot grid, depth fog) on `.monaco-workbench.floating-panels` + grid view; slow `dsh-ocean-drift` drift animation |
+| `src/vs/workbench/browser/media/floatingPanels.css` | No DSH block: the ambient ocean scene, the 14px card radius and the glass outlines are gone. `modernUI` is off, so the upstream floating system stays inert. |
 | `src/vs/server/node/webClientServer.ts` | Webview self-hosting: `workbenchWebConfiguration.webviewEndpoint` → our own `/oss-<commit>/static/out/vs/workbench/contrib/webview/browser/pre/` (upstream ships `webviewContentExternalBaseUrlTemplate` pointed at Microsoft's signed-build CDN, which 404s every OSS commit) |
 | `src/vs/workbench/services/environment/browser/environmentService.ts` | Absolutize a root-relative `webviewEndpoint` against the page origin (code-server's `patches/webview.diff` approach) so webviewElement's strict origin parsing accepts it |
 | `src/vs/workbench/contrib/webview/browser/pre/index.html` | Same-host parent accepted in `signalReady()` (uuid-subdomain isolation targets Microsoft's shared CDN, not this twin); classic `serviceWorker.register()` instead of `{ type: 'module' }` — module-service-worker script fetches carry no connection-token cookie and were 403'd ('Forbidden.' in every preview pane); CSP meta script hash recomputed for the edited bootstrap
 
 The empty editor therefore shows exactly one mark — the big DO twinkle —
-and the workbench runs the floating-window architecture: parts as rounded
-cards over the ambient ocean scene, matching `ui-layout`'s AppFrame. The
-identity extension (`packages/api/ide/src/twin-theme.ts`) enables
-`workbench.experimental.modernUI` and supplies `modernUI.shellBackground
-#0e1214` / `surface.border #f7f8f81f`; the staged `../.vscode-twin/dist`
-carries all of the above applied to its built copies (workbench.css,
-server-main.js, letterpress files, staged extension package.json + theme
+and the workbench runs the stock flat layout: `workbench.experimental.modernUI`
+is off in both the server defaults and the staged extension, there is no
+ocean scene, no glass frame and no widget shadow. Chrome is one ruled sheet
+in the harness Atlas palette; the identity extension
+(`packages/api/ide/src/twin-theme.ts`) stages `DO Harness Dark`, and the
+staged `../.vscode-twin/dist` carries the above applied to its built copies
+(server-main.js, letterpress files, staged extension package.json + theme
 JSON).
 
 ## Static-asset cache trap (release ritual)
