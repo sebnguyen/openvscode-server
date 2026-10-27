@@ -3,6 +3,31 @@
 <html>
 	<head>
 		<script nonce="{{WORKBENCH_SCRIPT_NONCE}}">
+			// Harness twin: an embedded workbench boots inside a host page whose
+			// composer owns the keyboard. Restoring the active editor calls focus()
+			// during startup; in an iframe that promotes browser focus to the frame
+			// and steals the host's keyboard. Ignore programmatic focus until the
+			// user actually gestures inside the frame; the first click still focuses
+			// the clicked element through the browser's default action.
+			(function () {
+				if (window.parent === window) return;
+				let armed = false;
+				const elementFocus = HTMLElement.prototype.focus;
+				HTMLElement.prototype.focus = function () {
+					if (!armed) return;
+					return elementFocus.apply(this, arguments);
+				};
+				const windowFocus = window.focus;
+				window.focus = function () {
+					if (!armed) return;
+					return windowFocus.apply(this, arguments);
+				};
+				for (const type of ['pointerdown', 'keydown', 'wheel']) {
+					window.addEventListener(type, () => { armed = true; }, true);
+				}
+			})();
+		</script>
+		<script nonce="{{WORKBENCH_SCRIPT_NONCE}}">
 			performance.mark('code/didStartRenderer');
 		</script>
 		<meta charset="utf-8" />
